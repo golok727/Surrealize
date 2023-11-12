@@ -8,4 +8,3 @@ pub struct User {
     email_id: String,
     age: u8,
 }
-
