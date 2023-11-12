@@ -1,0 +1,10 @@
+{
+  "search.exclude": {
+    "**/target": true,
+    "**/.git": true
+  },
+  "rust-analyzer.linkedProjects": [
+    ".\\Cargo.toml",
+    ".\\Cargo.toml"
+  ]
+}
