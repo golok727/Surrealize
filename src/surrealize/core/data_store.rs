@@ -1,5 +1,8 @@
 use std::sync::Arc;
 
+use crate::surrealize::error::Error;
+use serde::{Deserialize, Serialize};
+
 use super::opts;
 use futures_util::future::LocalBoxFuture;
 use surrealdb::{
@@ -14,6 +17,9 @@ pub struct DataStore {
 }
 
 impl DataStore {
+    fn new(conn: Surreal<Client>) -> Self {
+        Self { db: Arc::new(conn) }
+    }
     pub fn init(
         opts: opts::ConnectionOptions,
     ) -> LocalBoxFuture<'static, Result<Self, crate::surrealize::error::Error>> {
@@ -32,7 +38,7 @@ impl DataStore {
             if let Some(on) = opts.on {
                 conn.use_ns(on.namespace).use_db(on.database).await?;
             }
-            let data_store = Self { db: Arc::new(conn) };
+            let data_store = Self::new(conn);
 
             Ok(data_store)
         })

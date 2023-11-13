@@ -6,6 +6,9 @@ use surrealdb::Error as SurrealDBError;
 pub enum Error {
     #[display(fmt = "Database Error: {}", _0)]
     DatabaseError(SurrealDBError),
+
+    #[display(fmt = "Model '{}' is already registered..", _0)]
+    ModelAlreadyRegistered(&'static str),
 }
 
 impl From<SurrealDBError> for Error {
