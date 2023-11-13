@@ -1,5 +1,6 @@
 use std::sync::Arc;
 
+use super::opts;
 use futures_util::future::LocalBoxFuture;
 use surrealdb::{
     engine::remote::ws::{Client, Ws},
@@ -7,28 +8,25 @@ use surrealdb::{
     Surreal,
 };
 
-pub struct On {
-    pub namespace: &'static str,
-    pub database: &'static str,
-}
-pub struct ConnectionOptions {
-    pub connection_url: &'static str,
-    pub auth: Option<Root<'static>>,
-    pub on: Option<On>,
-}
+#[derive(Debug)]
 pub struct DataStore {
     db: Arc<Surreal<Client>>,
 }
 
 impl DataStore {
     pub fn init(
-        opts: ConnectionOptions,
-    ) -> LocalBoxFuture<'static, Result<Self, surrealdb::Error>> {
+        opts: opts::ConnectionOptions,
+    ) -> LocalBoxFuture<'static, Result<Self, crate::surrealize::error::Error>> {
         Box::pin(async move {
             let conn = Surreal::new::<Ws>(opts.connection_url).await?;
 
             if let Some(auth) = opts.auth {
-                conn.signin(auth).await?;
+                let credentials = Root {
+                    username: &auth.username,
+                    password: &auth.password,
+                };
+
+                conn.signin(credentials).await?;
             }
 
             if let Some(on) = opts.on {
@@ -47,7 +45,7 @@ mod tests {
 
     #[tokio::test]
     async fn connect_database() {
-        let connection_options = ConnectionOptions {
+        let connection_options = opts::ConnectionOptions {
             connection_url: "127.0.0.1:8000",
             auth: None,
             on: None,
@@ -60,7 +58,7 @@ mod tests {
 
     #[tokio::test]
     async fn failed_connection() {
-        let connection_options = ConnectionOptions {
+        let connection_options = opts::ConnectionOptions {
             connection_url: "127.0.0.1:800", // Change the running port
             auth: None,
             on: None,
