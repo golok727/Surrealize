@@ -8,7 +8,13 @@ pub enum Error {
     DatabaseError(SurrealDBError),
 
     #[display(fmt = "Model '{}' is already registered..", _0)]
-    ModelAlreadyRegistered(&'static str),
+    ModelAlreadyRegistered(String),
+
+    #[display(fmt = "Repository '{}' not found", _0)]
+    RepositoryNotFound(String),
+
+    #[display(fmt = "Internal Error")]
+    InternalError,
 }
 
 impl From<SurrealDBError> for Error {

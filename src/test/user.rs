@@ -3,8 +3,8 @@ use surrealdb::sql::{Thing, Value};
 
 #[derive(Serialize, Deserialize, Debug, Clone)]
 pub struct User {
-    id: Option<Thing>,
-    name: String,
-    email_id: String,
-    age: u8,
+    pub id: Option<Thing>,
+    pub name: String,
+    pub email_id: String,
+    pub age: u8,
 }
