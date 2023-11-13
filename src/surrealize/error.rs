@@ -13,3 +13,15 @@ impl From<SurrealDBError> for Error {
         Error::DatabaseError(error)
     }
 }
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+    #[test]
+    fn test_error() {
+        let surreal_error = SurrealDBError::Api(surrealdb::error::Api::AlreadyConnected);
+        let custom_error = Error::DatabaseError(surreal_error);
+        let string_version = custom_error.to_string();
+        assert_eq!(string_version, "Database Error: Already connected")
+    }
+}
