@@ -1,5 +1,5 @@
 use serde::{Deserialize, Serialize};
-use surrealdb::sql::{Thing, Value};
+use surrealdb::sql::Thing;
 
 #[derive(Serialize, Deserialize, Debug, Clone)]
 pub struct User {
