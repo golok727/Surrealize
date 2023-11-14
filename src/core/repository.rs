@@ -31,7 +31,7 @@ where
             let query = "CREATE type::table($tb) CONTENT $data RETURN *;";
             // let content = sql::to_value(new)?;
 
-            let db = Arc::clone(&self.db);
+            let db = &self.db;
             let mut res = db
                 .query(query)
                 .bind(("tb", table_name))
@@ -51,7 +51,7 @@ where
             let table_name = self.model.get_table_name().to_string();
             let query = "SELECT * FROM type::table($tb);";
 
-            let db = Arc::clone(&self.db);
+            let db = &self.db;
             let mut res = db.query(query).bind(("tb", table_name)).await?;
 
             let all_entires: Vec<T> = res.take(0)?;
