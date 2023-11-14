@@ -1,7 +1,7 @@
 #[cfg(test)]
 mod tests {
-    use crate::surrealize::core::data_store::DataStore;
-    use crate::surrealize::core::opts;
+    use crate::core::data_store::DataStore;
+    use crate::core::opts;
 
     #[tokio::test]
     async fn test_connect_database() {

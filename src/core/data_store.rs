@@ -1,6 +1,6 @@
-use std::{any::Any, collections::HashMap, hash::Hash, sync::Arc};
+use std::{any::Any, collections::HashMap, sync::Arc};
 
-use crate::surrealize::error::Error;
+use crate::error::Error;
 use serde::{Deserialize, Serialize};
 
 use super::{model::Model, opts, repository::Repository};

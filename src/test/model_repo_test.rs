@@ -1,9 +1,9 @@
 #[cfg(test)]
 mod tests {
-    use crate::surrealize::core::data_store::DataStore;
-    use crate::surrealize::core::model::Model;
-    use crate::surrealize::core::opts;
-    use crate::surrealize::core::repository::Repository;
+    use crate::core::data_store::DataStore;
+    use crate::core::model::Model;
+    use crate::core::opts;
+    use crate::core::repository::Repository;
     use crate::test::user::User;
 
     #[test]
