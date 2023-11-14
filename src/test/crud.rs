@@ -21,14 +21,12 @@ mod tests {
 
         let user = User {
             id: None,
-            name: "Nandu".into(),
+            name: "Hello".into(),
             email_id: "radhakrsna@golok.vrindavan".into(),
             age: 19,
         };
 
-        let data_store = data_store
-            .register_repository(Model::<User>::new())
-            .unwrap();
+        let data_store = data_store.register_model(Model::<User>::new()).unwrap();
 
         let user_repo = data_store.get_repository::<User>().unwrap();
         println!("Repo Name: {}", user_repo.get_table_name());
@@ -52,9 +50,7 @@ mod tests {
         };
         let data_store = DataStore::init(connection_options).await.unwrap();
 
-        let data_store = data_store
-            .register_repository(Model::<User>::new())
-            .unwrap();
+        let data_store = data_store.register_model(Model::<User>::new()).unwrap();
 
         let user_repo = data_store.get_repository::<User>().unwrap();
         println!("Repo Name: {}", user_repo.get_table_name());

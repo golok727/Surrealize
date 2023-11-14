@@ -35,10 +35,10 @@ mod tests {
             age: 19,
         };
         let user_model = Model::<User>::new();
-        let data_store = data_store.register_repository(user_model.clone()).unwrap();
+        let data_store = data_store.register_model(user_model.clone()).unwrap();
 
         let user_model = Model::<User>::new();
-        let res = data_store.register_repository(user_model.clone());
+        let res = data_store.register_model(user_model.clone());
         assert!(res.is_err());
     }
 
@@ -59,7 +59,7 @@ mod tests {
         };
 
         let user_model = Model::<User>::new();
-        let res = data_store.register_repository(user_model.clone());
+        let res = data_store.register_model(user_model.clone());
         assert!(res.is_ok());
 
         let data_store = res.unwrap();

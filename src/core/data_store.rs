@@ -38,7 +38,7 @@ use surrealdb::{
 ///         on: None,
 ///     };
 ///     let  conn = DataStore::init(connection_options).await.unwrap();
-///     let conn = conn.register_repository(Model::<User>::new()).unwrap();
+///     let conn = conn.register_model(Model::<User>::new()).unwrap();
 ///     let user_repo = conn.get_repository::<User>().unwrap();
 ///     println!("TableName: {}", user_repo.get_table_name());
 ///     println!("Hello, world!");
@@ -85,7 +85,7 @@ impl DataStore {
     ///
     /// If it is already registered it will return a Error
     ///
-    pub fn register_repository<T>(mut self, model: Model<T>) -> Result<Self, Error>
+    pub fn register_model<T>(mut self, model: Model<T>) -> Result<Self, Error>
     where
         T: Serialize + ?Sized + for<'de> Deserialize<'de> + 'static,
     {
