@@ -38,4 +38,29 @@ mod tests {
         let create_user = created_user.unwrap();
         assert!(create_user.id.is_some())
     }
+
+    #[tokio::test]
+    async fn test_find_users() {
+        let connection_options = opts::ConnectionOptions {
+            connection_url: "127.0.0.1:8000", // Change the running port
+            auth: None,
+            on: On {
+                database: "testing",
+                namespace: "development",
+            }
+            .into(),
+        };
+        let data_store = DataStore::init(connection_options).await.unwrap();
+
+        let data_store = data_store
+            .register_repository(Model::<User>::new())
+            .unwrap();
+
+        let user_repo = data_store.get_repository::<User>().unwrap();
+        println!("Repo Name: {}", user_repo.get_table_name());
+        let res = user_repo.get_all().await;
+        assert!(res.is_ok());
+        let users = res.unwrap();
+        dbg!(users);
+    }
 }
