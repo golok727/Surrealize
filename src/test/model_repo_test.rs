@@ -9,7 +9,7 @@ mod tests {
     #[test]
     fn test_model() {
         let user_model = Model::<User>::new();
-        assert_eq!(user_model.get_table_name(), "user");
+        assert_eq!(user_model.get_table_name(), Model::<User>::gen_tb_name());
     }
     #[test]
     fn test_repository() {
@@ -17,7 +17,7 @@ mod tests {
         let user_repo = Repository::new(user_model);
         let table_name = user_repo.get_table_name();
         println!("Table Name: {}", table_name);
-        assert_eq!(table_name, "user");
+        assert_eq!(table_name, Model::<User>::gen_tb_name());
     }
 
     #[tokio::test]
@@ -29,7 +29,7 @@ mod tests {
         };
         let mut data_store = DataStore::init(connection_options).await.unwrap();
 
-        let user = User {
+        let _user = User {
             id: None,
             name: "Radha".into(),
             email_id: "someemail".into(),
@@ -68,8 +68,8 @@ mod tests {
         assert!(repo.is_ok());
         let repo = repo.unwrap();
 
-        repo.create(user); // Todo
+        repo.create(user.clone()); // Todo
 
-        assert_eq!(repo.get_table_name(), "user");
+        assert_eq!(repo.get_table_name(), Model::<User>::gen_tb_name());
     }
 }

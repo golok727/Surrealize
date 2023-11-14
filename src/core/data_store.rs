@@ -11,7 +11,41 @@ use surrealdb::{
     Surreal,
 };
 
-#[derive(Debug)]
+/// DataStore represents a manager for repositories and interactions with a Surreal database.
+///
+/// It holds a connection to the Surreal database and maintains a collection of repositories.
+///
+/// # Example
+///
+/// ```rust
+/// use serde::{Deserialize, Serialize};
+/// use surrealize::model::Model;
+/// use surrealize::opts::ConnectionOptions;
+/// use surrealize::DataStore;
+///
+/// #[derive(Serialize, Deserialize, Debug, Clone)]
+/// struct User {
+///     id: String,
+///     name: String,
+///     age: u8,
+/// }
+///
+/// #[tokio::main]
+/// async fn main() {
+///     let connection_options = ConnectionOptions {
+///         connection_url: "127.0.0.1:8000",
+///         auth: None,
+///         on: None,
+///     };
+///     let mut conn = DataStore::init(connection_options).await.unwrap();
+///     conn.register_repository(Model::<User>::new()).unwrap();
+///     let user_repo = conn.get_repository::<User>().unwrap();
+///     println!("TableName: {}", user_repo.get_table_name());
+///     println!("Hello, world!");
+///
+/// }
+/// ```
+///
 pub struct DataStore {
     db: Arc<Surreal<Client>>,
     repos: HashMap<String, Box<dyn Any>>,
@@ -24,6 +58,8 @@ impl DataStore {
             repos: HashMap::new(),
         }
     }
+    /// Initializes a database connection and returns a DataStore which will hold the connection
+    /// Use it to register repositories, get repositories etc...
     pub fn init(opts: opts::ConnectionOptions) -> LocalBoxFuture<'static, Result<Self, Error>> {
         Box::pin(async move {
             let conn = Surreal::new::<Ws>(opts.connection_url).await?;
@@ -45,6 +81,10 @@ impl DataStore {
             Ok(data_store)
         })
     }
+    /// Registers a repository..
+    ///
+    /// If it is already registered it will return a Error
+    ///
     pub fn register_repository<T>(&mut self, model: Model<T>) -> Result<(), Error>
     where
         T: Serialize + ?Sized + Deserialize<'static> + 'static,

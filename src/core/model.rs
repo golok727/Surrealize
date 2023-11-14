@@ -1,5 +1,7 @@
 use serde::{Deserialize, Serialize};
 
+use crate::utils::PascalToSnake;
+
 #[derive(Clone)]
 pub struct Model<T>
 where
@@ -19,16 +21,11 @@ where
             .rsplit("::")
             .next()
             .unwrap_or(type_name)
-            .to_lowercase();
+            .to_snake_case();
         table_name
     }
     pub fn new() -> Self {
-        let type_name = std::any::type_name::<T>();
-        let table_name = type_name
-            .rsplit("::")
-            .next()
-            .unwrap_or(type_name)
-            .to_lowercase();
+        let table_name = Self::gen_tb_name();
 
         Self {
             tb: table_name,
