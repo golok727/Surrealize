@@ -8,3 +8,11 @@ pub struct User {
     pub email_id: String,
     pub age: u8,
 }
+
+#[derive(Serialize, Deserialize, Debug, Clone)]
+pub struct Post {
+    pub id: Option<Thing>,
+    pub title: String,
+    pub content: String,
+    pub user_id: Thing,
+}

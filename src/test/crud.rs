@@ -4,7 +4,7 @@ mod tests {
     use crate::core::model::Model;
     use crate::core::opts;
     use crate::opts::On;
-    use crate::test::user::User;
+    use crate::test::models::User;
 
     #[tokio::test]
     async fn test_create_user() {

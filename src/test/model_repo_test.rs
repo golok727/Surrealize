@@ -3,7 +3,7 @@ mod tests {
     use crate::core::data_store::DataStore;
     use crate::core::model::Model;
     use crate::core::opts;
-    use crate::test::user::User;
+    use crate::test::models::User;
 
     #[test]
     fn test_model() {
