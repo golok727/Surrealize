@@ -1,2 +1,2 @@
 # Surrealize
-Designing a ODM for surreal db
+Designing a client for SurrealDB
