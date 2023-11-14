@@ -5,7 +5,7 @@ use crate::error::Error;
 use super::model::Model;
 use futures_util::future::LocalBoxFuture;
 use serde::{Deserialize, Serialize};
-use surrealdb::{engine::remote::ws::Client, sql, Surreal};
+use surrealdb::{engine::remote::ws::Client, Surreal};
 pub struct Repository<T>
 where
     T: Serialize + ?Sized + for<'de> Deserialize<'de> + 'static,
@@ -29,13 +29,13 @@ where
         Box::pin(async move {
             let table_name = self.model.get_table_name().to_string();
             let query = "CREATE type::table($tb) CONTENT $data RETURN *;";
-            let content = sql::to_value(new)?;
+            // let content = sql::to_value(new)?;
 
             let db = Arc::clone(&self.db);
             let mut res = db
                 .query(query)
                 .bind(("tb", table_name))
-                .bind(("data", content))
+                .bind(("data", new))
                 .await?;
 
             let created_entity: Option<T> = res.take(0)?;

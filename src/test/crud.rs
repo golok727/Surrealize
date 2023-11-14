@@ -9,7 +9,7 @@ mod tests {
     #[tokio::test]
     async fn test_create_user() {
         let connection_options = opts::ConnectionOptions {
-            connection_url: "127.0.0.1:8000", // Change the running port
+            connection_url: "127.0.0.1:8000",
             auth: None,
             on: On {
                 database: "testing",
@@ -21,7 +21,7 @@ mod tests {
 
         let user = User {
             id: None,
-            name: "Aadi".into(),
+            name: "Nandu".into(),
             email_id: "radhakrsna@golok.vrindavan".into(),
             age: 19,
         };
