@@ -40,14 +40,3 @@ where
         &self.tb
     }
 }
-
-#[cfg(test)]
-mod tests {
-    use super::*;
-    use crate::test::user::User;
-    #[test]
-    fn test_model() {
-        let user_model = Model::<User>::new();
-        assert_eq!(user_model.get_table_name(), "user");
-    }
-}

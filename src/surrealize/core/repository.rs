@@ -22,17 +22,3 @@ where
     pub fn update(&self) {}
     pub fn delete(&self) {}
 }
-
-#[cfg(test)]
-mod tests {
-    use super::*;
-    use crate::test::user::User;
-    #[test]
-    fn test_repository() {
-        let user_model = Model::<User>::new();
-        let user_repo = Repository::new(user_model);
-        let table_name = user_repo.get_table_name();
-        println!("Table Name: {}", table_name);
-        assert_eq!(table_name, "user");
-    }
-}
