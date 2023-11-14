@@ -7,6 +7,9 @@ pub enum Error {
     #[display(fmt = "Database Error: {}", _0)]
     DatabaseError(SurrealDBError),
 
+    #[display(fmt = "Database Error: {}", _0)]
+    SurrealErrorDB(surrealdb::error::Db),
+
     #[display(fmt = "Model '{}' is already registered..", _0)]
     ModelAlreadyRegistered(String),
 
@@ -15,11 +18,20 @@ pub enum Error {
 
     #[display(fmt = "Internal Error")]
     InternalError,
+
+    #[display(fmt = "ResponseTakeError: Entity May be created but was unable to take")]
+    ResponseTakeError,
 }
 
 impl From<SurrealDBError> for Error {
     fn from(error: SurrealDBError) -> Self {
         Error::DatabaseError(error)
+    }
+}
+
+impl From<surrealdb::error::Db> for Error {
+    fn from(error: surrealdb::error::Db) -> Self {
+        Error::SurrealErrorDB(error)
     }
 }
 

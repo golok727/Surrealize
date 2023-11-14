@@ -5,7 +5,7 @@ use crate::utils::PascalToSnake;
 #[derive(Clone)]
 pub struct Model<T>
 where
-    T: Serialize + ?Sized + Deserialize<'static> + 'static,
+    T: Serialize + ?Sized + for<'de> Deserialize<'de> + 'static,
 {
     tb: String,
     _phantom: std::marker::PhantomData<T>,
@@ -13,7 +13,7 @@ where
 
 impl<T> Model<T>
 where
-    T: Serialize + ?Sized + Deserialize<'static> + 'static,
+    T: Serialize + ?Sized + for<'de> Deserialize<'de> + 'static,
 {
     pub fn gen_tb_name() -> String {
         let type_name = std::any::type_name::<T>();

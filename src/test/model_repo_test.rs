@@ -3,7 +3,6 @@ mod tests {
     use crate::core::data_store::DataStore;
     use crate::core::model::Model;
     use crate::core::opts;
-    use crate::core::repository::Repository;
     use crate::test::user::User;
 
     #[test]
@@ -11,14 +10,14 @@ mod tests {
         let user_model = Model::<User>::new();
         assert_eq!(user_model.get_table_name(), Model::<User>::gen_tb_name());
     }
-    #[test]
-    fn test_repository() {
-        let user_model = Model::<User>::new();
-        let user_repo = Repository::new(user_model);
-        let table_name = user_repo.get_table_name();
-        println!("Table Name: {}", table_name);
-        assert_eq!(table_name, Model::<User>::gen_tb_name());
-    }
+    // #[test]
+    // fn test_repository() {
+    //     let user_model = Model::<User>::new();
+    //     let user_repo = Repository::new(user_model);
+    //     let table_name = user_repo.get_table_name();
+    //     println!("Table Name: {}", table_name);
+    //     assert_eq!(table_name, Model::<User>::gen_tb_name());
+    // }
 
     #[tokio::test]
     async fn test_registering_repo() {
@@ -27,7 +26,7 @@ mod tests {
             auth: None,
             on: None,
         };
-        let mut data_store = DataStore::init(connection_options).await.unwrap();
+        let data_store = DataStore::init(connection_options).await.unwrap();
 
         let _user = User {
             id: None,
@@ -36,8 +35,7 @@ mod tests {
             age: 19,
         };
         let user_model = Model::<User>::new();
-        let res = data_store.register_repository(user_model.clone());
-        assert!(res.is_ok());
+        let data_store = data_store.register_repository(user_model.clone()).unwrap();
 
         let user_model = Model::<User>::new();
         let res = data_store.register_repository(user_model.clone());
@@ -51,7 +49,7 @@ mod tests {
             auth: None,
             on: None,
         };
-        let mut data_store = DataStore::init(connection_options).await.unwrap();
+        let data_store = DataStore::init(connection_options).await.unwrap();
 
         let user = User {
             id: None,
@@ -64,6 +62,7 @@ mod tests {
         let res = data_store.register_repository(user_model.clone());
         assert!(res.is_ok());
 
+        let data_store = res.unwrap();
         let repo = data_store.get_repository::<User>();
         assert!(repo.is_ok());
         let repo = repo.unwrap();

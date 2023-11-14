@@ -37,8 +37,8 @@ use surrealdb::{
 ///         auth: None,
 ///         on: None,
 ///     };
-///     let mut conn = DataStore::init(connection_options).await.unwrap();
-///     conn.register_repository(Model::<User>::new()).unwrap();
+///     let  conn = DataStore::init(connection_options).await.unwrap();
+///     let conn = conn.register_repository(Model::<User>::new()).unwrap();
 ///     let user_repo = conn.get_repository::<User>().unwrap();
 ///     println!("TableName: {}", user_repo.get_table_name());
 ///     println!("Hello, world!");
@@ -85,22 +85,22 @@ impl DataStore {
     ///
     /// If it is already registered it will return a Error
     ///
-    pub fn register_repository<T>(&mut self, model: Model<T>) -> Result<(), Error>
+    pub fn register_repository<T>(mut self, model: Model<T>) -> Result<Self, Error>
     where
-        T: Serialize + ?Sized + Deserialize<'static> + 'static,
+        T: Serialize + ?Sized + for<'de> Deserialize<'de> + 'static,
     {
         let repo_name = model.get_table_name().to_string();
-        let repo = Repository::new(model);
+        let repo = Repository::new(model, Arc::clone(&self.db));
         if self.repos.contains_key(&repo_name) {
             return Err(Error::ModelAlreadyRegistered(repo_name.clone()));
         }
         self.repos.insert(repo_name, Box::new(repo));
-        Ok(())
+        Ok(self)
     }
 
     pub fn get_repository<T>(&self) -> Result<&Repository<T>, Error>
     where
-        T: Serialize + Deserialize<'static> + 'static,
+        T: Serialize + for<'de> Deserialize<'de> + 'static,
     {
         let repo_name = Model::<T>::gen_tb_name();
         match self.repos.get(&repo_name) {
