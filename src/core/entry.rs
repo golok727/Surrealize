@@ -13,27 +13,6 @@ where
     repo: &'a Repository<T>,
 }
 
-impl<'a, T> fmt::Display for Entry<'a, T>
-where
-    T: Serialize + ?Sized + for<'de> Deserialize<'de> + 'static + std::fmt::Debug,
-{
-    fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
-        write!(f, "{:#?}", self.data)
-    }
-}
-
-impl<'a, T> Serialize for Entry<'a, T>
-where
-    T: Serialize + ?Sized + for<'de> Deserialize<'de> + 'static,
-{
-    fn serialize<S>(&self, serializer: S) -> Result<S::Ok, S::Error>
-    where
-        S: serde::Serializer,
-    {
-        self.data.serialize(serializer)
-    }
-}
-
 impl<'a, T> Entry<'a, T>
 where
     T: Serialize + ?Sized + for<'de> Deserialize<'de> + 'static,
@@ -57,5 +36,26 @@ where
     pub fn delete(&self) {
         let _repo = self.repo;
         todo!()
+    }
+}
+
+impl<'a, T> fmt::Display for Entry<'a, T>
+where
+    T: Serialize + ?Sized + for<'de> Deserialize<'de> + 'static + std::fmt::Debug,
+{
+    fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
+        write!(f, "{:#?}", self.data)
+    }
+}
+
+impl<'a, T> Serialize for Entry<'a, T>
+where
+    T: Serialize + ?Sized + for<'de> Deserialize<'de> + 'static,
+{
+    fn serialize<S>(&self, serializer: S) -> Result<S::Ok, S::Error>
+    where
+        S: serde::Serializer,
+    {
+        self.data.serialize(serializer)
     }
 }
