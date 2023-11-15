@@ -2,10 +2,13 @@ use std::sync::Arc;
 
 use crate::error::Error;
 
+use super::entry::Entry;
 use super::model::Model;
 use futures_util::future::LocalBoxFuture;
 use serde::{Deserialize, Serialize};
 use surrealdb::{engine::remote::ws::Client, Surreal};
+
+#[derive(Debug)]
 pub struct Repository<T>
 where
     T: Serialize + ?Sized + for<'de> Deserialize<'de> + 'static,
@@ -25,7 +28,7 @@ where
     pub fn get_table_name(&self) -> &str {
         &self.model.get_table_name()
     }
-    pub fn create(&self, new: T) -> LocalBoxFuture<Result<T, Error>> {
+    pub fn create(&self, new: T) -> LocalBoxFuture<Result<Entry<T>, Error>> {
         Box::pin(async move {
             let table_name = self.model.get_table_name().to_string();
             let query = "CREATE type::table($tb) CONTENT $data RETURN *;";
@@ -41,12 +44,12 @@ where
             let created_entity: Option<T> = res.take(0)?;
 
             match created_entity {
-                Some(user) => Ok(user),
+                Some(user) => Ok(Entry::new(user, &self)),
                 None => Err(Error::ResponseTakeError),
             }
         })
     }
-    pub fn get_all(&self) -> LocalBoxFuture<Result<Vec<T>, Error>> {
+    pub fn get_all(&self) -> LocalBoxFuture<Result<Vec<Entry<T>>, Error>> {
         Box::pin(async move {
             let table_name = self.model.get_table_name().to_string();
             let query = "SELECT * FROM type::table($tb);";
@@ -54,9 +57,13 @@ where
             let db = &self.db;
             let mut res = db.query(query).bind(("tb", table_name)).await?;
 
-            let all_entires: Vec<T> = res.take(0)?;
+            let data: Vec<T> = res.take(0)?;
+            let all_entries = data
+                .into_iter()
+                .map(|entry| Entry::new(entry, &self))
+                .collect::<Vec<Entry<T>>>();
 
-            Ok(all_entires)
+            Ok(all_entries)
         })
     }
     pub fn update(&self) {}

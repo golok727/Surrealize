@@ -33,8 +33,10 @@ mod tests {
 
         let created_user = user_repo.create(user).await;
         assert!(created_user.is_ok());
-        let create_user = created_user.unwrap();
-        assert!(create_user.id.is_some())
+
+        let created_user = created_user.unwrap();
+        dbg!(&created_user);
+        assert!(created_user.data().id.is_some())
     }
 
     #[tokio::test]
@@ -56,7 +58,6 @@ mod tests {
         println!("Repo Name: {}", user_repo.get_table_name());
         let res = user_repo.get_all().await;
         assert!(res.is_ok());
-        let users = res.unwrap();
-        dbg!(users);
+        let _users = res.unwrap();
     }
 }

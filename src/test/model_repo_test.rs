@@ -10,14 +10,6 @@ mod tests {
         let user_model = Model::<User>::new();
         assert_eq!(user_model.get_table_name(), Model::<User>::gen_tb_name());
     }
-    // #[test]
-    // fn test_repository() {
-    //     let user_model = Model::<User>::new();
-    //     let user_repo = Repository::new(user_model);
-    //     let table_name = user_repo.get_table_name();
-    //     println!("Table Name: {}", table_name);
-    //     assert_eq!(table_name, Model::<User>::gen_tb_name());
-    // }
 
     #[tokio::test]
     #[should_panic]
@@ -29,19 +21,9 @@ mod tests {
         };
         let data_store = DataStore::init(connection_options).await.unwrap();
 
-        let _user = User {
-            id: None,
-            name: "Radha".into(),
-            email_id: "someemail".into(),
-            age: 19,
-        };
-        let user_model = Model::<User>::new();
-        let data_store = data_store
-            .register_model(user_model.clone())
+        let _data_store = data_store
+            .register_model(Model::<User>::new())
             .register_model(Model::<User>::new());
-
-        let user_model = Model::<User>::new();
-        let res = data_store.register_model(user_model.clone());
     }
 
     #[tokio::test]
@@ -52,13 +34,6 @@ mod tests {
             on: None,
         };
         let data_store = DataStore::init(connection_options).await.unwrap();
-
-        let user = User {
-            id: None,
-            name: "Radha".into(),
-            email_id: "someemail".into(),
-            age: 19,
-        };
 
         let user_model = Model::<User>::new();
         let data_store = data_store.register_model(user_model.clone());

@@ -1,6 +1,6 @@
 mod core;
-pub mod error;
 mod utils;
+pub mod error;
 
 pub use crate::core::data_store::DataStore;
 pub use crate::core::model;

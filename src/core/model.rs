@@ -2,7 +2,8 @@ use serde::{Deserialize, Serialize};
 
 use crate::utils::PascalToSnake;
 
-#[derive(Clone)]
+#[derive(Clone, Debug)]
+
 pub struct Model<T>
 where
     T: Serialize + ?Sized + for<'de> Deserialize<'de> + 'static,
