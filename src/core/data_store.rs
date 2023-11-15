@@ -11,21 +11,21 @@ use surrealdb::{
     Surreal,
 };
 
-/// DataStore represents a manager for repositories and interactions with a Surreal database.
-///
-/// It holds a connection to the Surreal database and maintains a collection of repositories.
-///
+/// DataStore represents a manager for repositories and interactions with a Surreal database. This will allow you to get any
+/// registered repositories, modify them etc..
+/// .
 /// # Example
 ///
-/// ```rust
+/// ```no_run
 /// use serde::{Deserialize, Serialize};
 /// use surrealize::model::Model;
+/// use surrealize::sql::Thing;
 /// use surrealize::opts::ConnectionOptions;
 /// use surrealize::DataStore;
 ///
 /// #[derive(Serialize, Deserialize, Debug, Clone)]
 /// struct User {
-///     id: String,
+///     id: Option<Thing>,
 ///     name: String,
 ///     age: u8,
 /// }
@@ -83,6 +83,47 @@ impl DataStore {
     }
     /// Registers a repository to the datastore..
     /// If the same model is already registered then it will panic
+    /// The model will the registered with the snake_case name of the struct passed in
+    /// for example if you have a `User` struct the table in the database will be names as user
+    /// #### More examples
+    /// - User -> user
+    /// - UserTable -> user_table
+    /// - Post -> post
+    ///
+    /// > Custom Table names are coming soon!!!
+    ///
+    /// # Usage
+    ///
+    /// ```ignore
+    /// use serde::{Deserialize, Serialize};
+    /// use surrealize::model::Model;
+    /// use surrealize::sql::Thing;
+    /// use surrealize::opts::ConnectionOptions;
+    /// use surrealize::DataStore;
+    ///
+    /// #[derive(Serialize, Deserialize, Debug, Clone)]
+    /// struct User {
+    ///     id: Option<Thing>,
+    ///     name: String,
+    ///     age: u8,
+    /// }
+    ///
+    /// #[tokio::main]
+    /// async fn main() {
+    ///     let connection_options = ConnectionOptions {
+    ///         connection_url: "127.0.0.1:8000",
+    ///         auth: None,
+    ///         on: None,
+    ///     };
+    ///     let  conn = DataStore::init(connection_options).await.unwrap();
+    ///     conn.register_model(Model::<User>::new()); // Registers a model;
+    ///         //.register_model(Model::<User>::new()); // If you do this it will panic as User Model is already registered
+    ///     let user_repo = conn.get_repository::<User>().unwrap(); // Gets a Repository
+    ///
+    ///     println!("TableName: {}", user_repo.get_table_name());
+    ///     println!("Hello, world!");
+    /// }
+    ///
     pub fn register_model<T>(mut self, model: Model<T>) -> Self
     where
         T: Serialize + ?Sized + for<'de> Deserialize<'de> + 'static,

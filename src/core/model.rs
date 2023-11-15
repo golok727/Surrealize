@@ -16,7 +16,7 @@ impl<T> Model<T>
 where
     T: Serialize + ?Sized + for<'de> Deserialize<'de> + 'static,
 {
-    pub fn gen_tb_name() -> String {
+    pub(crate) fn gen_tb_name() -> String {
         let type_name = std::any::type_name::<T>();
         let table_name = type_name
             .rsplit("::")

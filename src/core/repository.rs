@@ -25,9 +25,34 @@ where
         Self { model, db }
     }
 
+    /// Gets the table name of the Model linked to the repository
     pub fn get_table_name(&self) -> &str {
         &self.model.get_table_name()
     }
+    /// # Usage
+    /// Create a new instance of the model in the database and returns a `Entity<T>` with the created data from the database
+    ///
+    /// ```no_run
+    /// use serde::{Serialize, Deserialize};
+    /// use surrealize::sql::Thing;
+    /// use surrealize::DataStore;
+    /// use surrealize::entry::Entry;
+    ///
+    /// #[derive(Serialize, Deserialize, Debug)]
+    /// struct User {
+    /// id: Option<Thing>,
+    /// name: String,
+    /// }
+    ///  async fn create_some_user(ds: &DataStore) {
+    ///         let user_repo = ds.get_repository::<User>().unwrap();
+    ///         let new_user = User {id: None, name: "Radha".to_owned()};
+    ///         let created_user: Entry<'_, User>  = user_repo.create(new_user).await.unwrap();
+    ///         let user_data: &User = created_user.data(); // get the reference to the created_user
+    ///    }  
+    ///  
+    /// ```
+    ///
+    ///
     pub fn create(&self, new: T) -> LocalBoxFuture<Result<Entry<T>, Error>> {
         Box::pin(async move {
             let table_name = self.model.get_table_name().to_string();
@@ -49,6 +74,25 @@ where
             }
         })
     }
+    /// # Usage
+    /// Gets all the entries from a given repository
+    /// ```no_run
+    /// use serde::{Serialize, Deserialize};
+    /// use surrealize::sql::Thing;
+    /// use surrealize::DataStore;
+    /// use surrealize::entry::Entry;
+    ///
+    /// #[derive(Serialize, Deserialize, Debug)]
+    /// struct User {
+    /// id: Option<Thing>,
+    /// name: String,
+    /// }
+    ///  async fn get_all_users(data_store: &DataStore) {
+    ///         let user_repo = data_store.get_repository::<User>().unwrap();
+    ///         let res: Vec<Entry<'_, User>> = user_repo.get_all().await.unwrap();
+    ///    }  
+    ///  
+    /// ```
     pub fn get_all(&self) -> LocalBoxFuture<Result<Vec<Entry<T>>, Error>> {
         Box::pin(async move {
             let table_name = self.model.get_table_name().to_string();
@@ -67,5 +111,6 @@ where
         })
     }
     pub fn update(&self) {}
+
     pub fn delete(&self) {}
 }

@@ -17,7 +17,7 @@ impl<'a, T> Entry<'a, T>
 where
     T: Serialize + ?Sized + for<'de> Deserialize<'de> + 'static,
 {
-    pub fn new(data: T, repo: &'a Repository<T>) -> Self {
+    pub(crate) fn new(data: T, repo: &'a Repository<T>) -> Self {
         Self { data, repo }
     }
     pub fn data_mut(&self) -> &T {
