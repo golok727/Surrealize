@@ -5,8 +5,6 @@
   },
   "rust-analyzer.linkedProjects": [
     ".\\Cargo.toml",
-    ".\\Cargo.toml",
-    ".\\examples\\start\\Cargo.toml"
   ],
   "cSpell.words": [
     "surrealize"

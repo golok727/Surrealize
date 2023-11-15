@@ -20,6 +20,7 @@ mod tests {
     // }
 
     #[tokio::test]
+    #[should_panic]
     async fn test_registering_repo() {
         let connection_options = opts::ConnectionOptions {
             connection_url: "127.0.0.1:8000", // Change the running port
@@ -35,11 +36,12 @@ mod tests {
             age: 19,
         };
         let user_model = Model::<User>::new();
-        let data_store = data_store.register_model(user_model.clone()).unwrap();
+        let data_store = data_store
+            .register_model(user_model.clone())
+            .register_model(Model::<User>::new());
 
         let user_model = Model::<User>::new();
         let res = data_store.register_model(user_model.clone());
-        assert!(res.is_err());
     }
 
     #[tokio::test]
@@ -59,15 +61,11 @@ mod tests {
         };
 
         let user_model = Model::<User>::new();
-        let res = data_store.register_model(user_model.clone());
-        assert!(res.is_ok());
+        let data_store = data_store.register_model(user_model.clone());
 
-        let data_store = res.unwrap();
         let repo = data_store.get_repository::<User>();
         assert!(repo.is_ok());
         let repo = repo.unwrap();
-
-        repo.create(user.clone()); // Todo
 
         assert_eq!(repo.get_table_name(), Model::<User>::gen_tb_name());
     }
