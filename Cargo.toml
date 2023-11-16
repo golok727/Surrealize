@@ -1,2 +1,17 @@
 [workspace]
-members = ["surrealize"]
+members = ["surrealize_core", "examples/getting_started"]
+
+[workspace.dependencies]
+tokio = "1.34.0"
+derive_more = "0.99.17"
+futures-util = "0.3.29"
+serde = "1.0.192"
+surrealdb = "1.0.0"
+
+[package]
+name = "surrealize"
+version = "0.1.0"
+edition = "2021"
+
+[dependencies]
+surrealize_core = { path = "./surrealize_core" }
