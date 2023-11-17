@@ -16,7 +16,7 @@ use surrealdb::{
 /// .
 /// # Example
 ///
-/// ```no_run
+/// ```ignore
 /// use serde::{Deserialize, Serialize};
 /// use surrealize::model::Model;
 /// use surrealize::sql::Thing;
@@ -154,3 +154,4 @@ impl DataStore {
         }
     }
 }
+

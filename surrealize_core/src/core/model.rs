@@ -38,3 +38,17 @@ where
         &self.tb
     }
 }
+
+impl<T> Default for Model<T>
+where
+    T: Serialize + ?Sized + for<'de> Deserialize<'de> + 'static,
+{
+    fn default() -> Self {
+        let table_name = Self::gen_tb_name();
+        Self {
+            tb: table_name,
+            _phantom: std::marker::PhantomData,
+        }
+    }
+}
+

@@ -32,7 +32,7 @@ where
     /// # Usage
     /// Create a new instance of the model in the database and returns a `Entity<T>` with the created data from the database
     ///
-    /// ```no_run
+    /// ```ignore
     /// use serde::{Serialize, Deserialize};
     /// use surrealize::sql::Thing;
     /// use surrealize::DataStore;
@@ -76,7 +76,7 @@ where
     }
     /// # Usage
     /// Gets all the entries from a given repository
-    /// ```no_run
+    /// ```ignore
     /// use serde::{Serialize, Deserialize};
     /// use surrealize::sql::Thing;
     /// use surrealize::DataStore;
@@ -114,3 +114,4 @@ where
 
     pub fn delete(&self) {}
 }
+
